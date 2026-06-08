@@ -8,6 +8,7 @@ import shape.Polygone;
 import shape.Rectangle;
 import shape.Line;
 import shape.Circle;
+import shape.Curve;
 
 public class PixelConverter {
     public static List<Pixel> shapeToPixels(Shape shape) {
@@ -23,6 +24,8 @@ public class PixelConverter {
             pixelRectangle((Rectangle) shape, pixels);
         } else if (shape instanceof Polygone) {
             pixelPolygon((Polygone) shape, pixels);
+        } else if (shape instanceof Curve) {
+            pixelCurve((Curve) shape, pixels);
         }
 
         return pixels;
@@ -135,6 +138,37 @@ public class PixelConverter {
             Point p2 = points.get((i + 1) % points.size());
             pixelLine(p1, p2, color, pixels);
         }
+    }
+
+    private static void pixelCurve(Curve shape, List<Pixel> pixels) {
+        Point p1 = shape.getP1();
+        Point p2 = shape.getP2();
+        Point p3 = shape.getP3();
+        Point p4 = shape.getP4();
+        if (p1 == null || p2 == null || p3 == null || p4 == null) {
+            return;
+        }
+
+        int color = shape.getColor();
+        int steps = 100;
+        double prevX = p1.getPos_x();
+        double prevY = p1.getPos_y();
+
+        for (int i = 1; i <= steps; i++) {
+            double t = (double) i / steps;
+            double x = cubicBezier(p1.getPos_x(), p2.getPos_x(), p3.getPos_x(), p4.getPos_x(), t);
+            double y = cubicBezier(p1.getPos_y(), p2.getPos_y(), p3.getPos_y(), p4.getPos_y(), t);
+            Point start = new Point((int) Math.round(prevX), (int) Math.round(prevY));
+            Point end = new Point((int) Math.round(x), (int) Math.round(y));
+            pixelLine(start, end, color, pixels);
+            prevX = x;
+            prevY = y;
+        }
+    }
+
+    private static double cubicBezier(double a, double b, double c, double d, double t) {
+        double mt = 1 - t;
+        return mt * mt * mt * a + 3 * mt * mt * t * b + 3 * mt * t * t * c + t * t * t * d;
     }
 
     private static void pixelLine(Point p1, Point p2, int color, List<Pixel> pixels) {

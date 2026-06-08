@@ -23,6 +23,13 @@ class CircleTest {
     }
 
     @Test
+    void testSetEtGetRadius() {
+        Circle c = new Circle();
+        c.setRadius(16);
+        assertEquals(16, c.getRadius());
+    }
+
+    @Test
     void testToString() {
         Circle c = new Circle();
         Point center = new Point();
