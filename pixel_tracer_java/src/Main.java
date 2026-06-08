@@ -1,15 +1,19 @@
 import shape.*;
-import area.Area;
 import layer.Layer;
 import render.Render;
 import pixel.PixelTracerApp;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
         PixelTracerApp app = new PixelTracerApp();
+        
+        // Ajouter une couche par défaut
+        Layer defaultLayer = new Layer(0, "Formes");
+        app.currentArea.layers.add(defaultLayer);
+        app.currentLayer = defaultLayer;
+        
         Scanner scanner = new Scanner(System.in);
 
         // Afficher la grille initiale
@@ -49,8 +53,10 @@ public class Main {
                             p.setPos_x(x);
                             p.setPos_y(y);
                             p.setColor(color);
-                            app.currentArea.layers.get(0).addShape(p);
+                            app.currentLayer.addShape(p);
                             System.out.println("Point ajouté: (" + x + ", " + y + ")");
+                            Render.drawAllLayers(app.currentArea);
+                            Render.renderArea(app.currentArea);
                         } else {
                             System.out.println("Usage: point <x> <y> <color_hex>");
                         }
@@ -71,8 +77,10 @@ public class Main {
                             line.setP1(p1);
                             line.setP2(p2);
                             line.setColor(Integer.parseInt(parts[5], 16));
-                            app.currentArea.layers.get(0).addShape(line);
+                            app.currentLayer.addShape(line);
                             System.out.println("Ligne ajoutée");
+                            Render.drawAllLayers(app.currentArea);
+                            Render.renderArea(app.currentArea);
                         } else {
                             System.out.println("Usage: line <x1> <y1> <x2> <y2> <color_hex>");
                         }
@@ -88,8 +96,10 @@ public class Main {
                             Circle circle = new Circle();
                             circle.setCenter(center);
                             circle.setColor(Integer.parseInt(parts[4], 16));
-                            app.currentArea.layers.get(0).addShape(circle);
+                            app.currentLayer.addShape(circle);
                             System.out.println("Cercle ajouté");
+                            Render.drawAllLayers(app.currentArea);
+                            Render.renderArea(app.currentArea);
                         } else {
                             System.out.println("Usage: circle <x> <y> <radius> <color_hex>");
                         }
@@ -97,7 +107,9 @@ public class Main {
 
                     case "clear":
                         app.currentArea.clear();
+                        app.currentLayer.shapes.clear();
                         System.out.println("Grille effacée");
+                        Render.renderArea(app.currentArea);
                         break;
 
                     case "render":
