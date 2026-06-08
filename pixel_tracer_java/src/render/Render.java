@@ -34,8 +34,8 @@ public class Render {
         for (Shape shape : layer.shapes) {
             List<Pixel> pixels = PixelConverter.shapeToPixels(shape);
             for (Pixel pixel : pixels) {
-                if (pixel.x >= 0 && pixel.x < area.width && pixel.y >= 0 && pixel.y < area.height) {
-                    area.area[pixel.y][pixel.x] = FULL_CHAR;
+                if (pixel.getPx() >= 0 && pixel.getPx() < area.width && pixel.getPy() >= 0 && pixel.getPy() < area.height) {
+                    area.area[pixel.getPy()][pixel.getPx()] = FULL_CHAR;
                 }
             }
         }
