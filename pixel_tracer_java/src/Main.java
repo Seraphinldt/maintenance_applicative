@@ -1,61 +1,132 @@
 import shape.*;
+import area.Area;
+import layer.Layer;
+import render.Render;
+import pixel.PixelTracerApp;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        PixelTracerApp app = new PixelTracerApp();
+        Scanner scanner = new Scanner(System.in);
 
-        // Un point
-        Point p1 = new Point();
-        p1.setPos_x(0);
-        p1.setPos_y(0);
-        p1.setColor(0xFF0000); // rouge
-        System.out.println("Point : " + p1);
+        // Afficher la grille initiale
+        Render.clearScreen();
+        displayHelp();
+        Render.renderArea(app.currentArea);
 
-        // Une ligne entre deux points
-        Point p2 = new Point();
-        p2.setPos_x(10);
-        p2.setPos_y(10);
+        // Boucle interactive
+        while (true) {
+            System.out.print("> ");
+            String input = scanner.nextLine().trim();
 
-        Line ligne = new Line();
-        ligne.setP1(p1);
-        ligne.setP2(p2);
-        ligne.setThickness(2.0f);
-        ligne.setColor(0x00FF00); // vert
-        System.out.println("Ligne : " + ligne);
+            if (input.isEmpty()) continue;
 
-        // Un cercle
-        Point centre = new Point();
-        centre.setPos_x(50);
-        centre.setPos_y(50);
+            String[] parts = input.split("\\s+");
+            String command = parts[0].toLowerCase();
 
-        Circle cercle = new Circle();
-        cercle.setCenter(centre);
-        cercle.setColor(0x0000FF); // bleu
-        System.out.println("Cercle : " + cercle);
+            try {
+                switch (command) {
+                    case "quit":
+                    case "exit":
+                        System.out.println("Au revoir!");
+                        scanner.close();
+                        return;
 
-        // Un polygone (triangle)
-        Point a = new Point();
-        a.setPos_x(0);
-        a.setPos_y(0);
+                    case "help":
+                        displayHelp();
+                        break;
 
-        Point b = new Point();
-        b.setPos_x(5);
-        b.setPos_y(10);
+                    case "point":
+                        // point x y color
+                        if (parts.length >= 4) {
+                            int x = Integer.parseInt(parts[1]);
+                            int y = Integer.parseInt(parts[2]);
+                            int color = Integer.parseInt(parts[3], 16);
+                            Point p = new Point();
+                            p.setPos_x(x);
+                            p.setPos_y(y);
+                            p.setColor(color);
+                            app.currentArea.layers.get(0).addShape(p);
+                            System.out.println("Point ajouté: (" + x + ", " + y + ")");
+                        } else {
+                            System.out.println("Usage: point <x> <y> <color_hex>");
+                        }
+                        break;
 
-        Point c = new Point();
-        c.setPos_x(10);
-        c.setPos_y(0);
+                    case "line":
+                        // line x1 y1 x2 y2 color
+                        if (parts.length >= 6) {
+                            Point p1 = new Point();
+                            p1.setPos_x(Integer.parseInt(parts[1]));
+                            p1.setPos_y(Integer.parseInt(parts[2]));
+                            
+                            Point p2 = new Point();
+                            p2.setPos_x(Integer.parseInt(parts[3]));
+                            p2.setPos_y(Integer.parseInt(parts[4]));
+                            
+                            Line line = new Line();
+                            line.setP1(p1);
+                            line.setP2(p2);
+                            line.setColor(Integer.parseInt(parts[5], 16));
+                            app.currentArea.layers.get(0).addShape(line);
+                            System.out.println("Ligne ajoutée");
+                        } else {
+                            System.out.println("Usage: line <x1> <y1> <x2> <y2> <color_hex>");
+                        }
+                        break;
 
-        ArrayList<Point> sommets = new ArrayList<>();
-        sommets.add(a);
-        sommets.add(b);
-        sommets.add(c);
+                    case "circle":
+                        // circle x y radius color
+                        if (parts.length >= 5) {
+                            Point center = new Point();
+                            center.setPos_x(Integer.parseInt(parts[1]));
+                            center.setPos_y(Integer.parseInt(parts[2]));
+                            
+                            Circle circle = new Circle();
+                            circle.setCenter(center);
+                            circle.setColor(Integer.parseInt(parts[4], 16));
+                            app.currentArea.layers.get(0).addShape(circle);
+                            System.out.println("Cercle ajouté");
+                        } else {
+                            System.out.println("Usage: circle <x> <y> <radius> <color_hex>");
+                        }
+                        break;
 
-        Polygone triangle = new Polygone();
-        triangle.setPoints(sommets);
-        triangle.setFill('X');
-        triangle.setColor(0xFFFF00); // jaune
-        System.out.println("Polygone : " + triangle);
+                    case "clear":
+                        app.currentArea.clear();
+                        System.out.println("Grille effacée");
+                        break;
+
+                    case "render":
+                        Render.drawAllLayers(app.currentArea);
+                        Render.renderArea(app.currentArea);
+                        System.out.println();
+                        break;
+
+                    default:
+                        System.out.println("Commande inconnue. Tapez 'help' pour l'aide.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Erreur: paramètres invalides");
+            } catch (Exception e) {
+                System.out.println("Erreur: " + e.getMessage());
+            }
+        }
+    }
+
+    static void displayHelp() {
+        System.out.println("\n=== PIXEL TRACER - Aide ===");
+        System.out.println("Commandes disponibles:");
+        System.out.println("  point <x> <y> <color_hex>       - Créer un point");
+        System.out.println("  line <x1> <y1> <x2> <y2> <color_hex> - Créer une ligne");
+        System.out.println("  circle <x> <y> <radius> <color_hex> - Créer un cercle");
+        System.out.println("  clear                            - Effacer la grille");
+        System.out.println("  render                           - Afficher la grille");
+        System.out.println("  help                             - Afficher cette aide");
+        System.out.println("  quit / exit                      - Quitter");
+        System.out.println("Exemple: point 10 5 FF0000\n");
     }
 }
