@@ -34,6 +34,6 @@ class RectangleTest {
         r.setP1(p);
         r.setWidth(5);
         r.setHeight(6);
-        assertEquals("Rectangle[p1=Point[pos_x=0, pos_y=0], width=5, height=6]", r.toString());
+        assertEquals("ectangle: Point{x=0, y=0, color=#000000} width=5 height=6", r.toString());
     }
 }

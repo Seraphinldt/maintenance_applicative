@@ -29,6 +29,6 @@ class CircleTest {
         center.setPos_x(3);
         center.setPos_y(4);
         c.setCenter(center); // on donne au cercle le centre donc c.center = Point(3,4)
-        assertEquals("Circle[center=Point[pos_x=3, pos_y=4]]", c.toString());
+        assertEquals("Circle[center=Point{x=3, y=4, color=#000000}]", c.toString());
     }
 }

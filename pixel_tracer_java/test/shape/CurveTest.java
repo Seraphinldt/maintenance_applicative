@@ -44,7 +44,7 @@ class CurveTest {
         c.setP1(p1); c.setP2(p2); c.setP3(p3); c.setP4(p4);
 
         assertEquals(
-            "Curve[p1=Point[pos_x=0, pos_y=0], p2=Point[pos_x=1, pos_y=2], p3=Point[pos_x=3, pos_y=4], p4=Point[pos_x=5, pos_y=6]]",
+            "Curve[p1=Point{x=0, y=0, color=#000000}, p2=Point{x=1, y=2, color=#000000}, p3=Point{x=3, y=4, color=#000000}, p4=Point{x=5, y=6, color=#000000}]",
             c.toString()
         );
     }

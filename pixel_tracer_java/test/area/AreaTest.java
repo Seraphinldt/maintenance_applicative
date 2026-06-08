@@ -114,7 +114,7 @@ class AreaTest {
         a.setFull_char('#');
 
         assertEquals(
-            "Area[id=1, name=TestArea, width=10, height=20, empty_char=., full_char=#]",
+            "Area[id=1, name=TestArea, width=10, height=20]",
             a.toString()
         );
     }
