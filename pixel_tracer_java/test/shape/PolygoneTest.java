@@ -15,14 +15,14 @@ class PolygoneTest {
         p.setPos_y(2);
         points.add(p);
         poly.setPoints(points);
-        assertEquals(1, poly.getPoints().size());
-        assertEquals(1, poly.getPoints().get(0).getPos_x());
+        assertEquals(1, poly.getPoints().size()); // Vérifie que le polygone contient bien 1 point.
+        assertEquals(1, poly.getPoints().get(0).getPos_x()); // donne le x du premier point du polygone
     }
 
     @Test
     void testPointsParDefautEstNull() {
         Polygone poly = new Polygone();
-        assertEquals(new ArrayList<>(), poly.getPoints());
+        assertNull(poly.getPoints());
     }
 
     @Test
@@ -34,6 +34,6 @@ class PolygoneTest {
         p.setPos_y(1);
         points.add(p);
         poly.setPoints(points);
-        assertEquals("Polygone{Shape[id=1, fill= , thickness=1.0, color=#000000, rotation=0.0], points=[Point{x=0, y=1, color=#000000}]}", poly.toString());
+        assertEquals("Polygone[points=[Point[pos_x=0, pos_y=1]]]", poly.toString());
     }
 }

@@ -16,7 +16,7 @@ class ShapeTest {
     @Test
     void testFill() {
         Point p = new Point();
-        p.setFill( 'X');
+        p.setFill('X');
         assertEquals('X', p.getFill());
     }
 

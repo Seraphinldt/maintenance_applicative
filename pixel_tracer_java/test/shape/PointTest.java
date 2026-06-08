@@ -24,6 +24,6 @@ class PointTest {
         Point p = new Point();
         p.setPos_x(3);
         p.setPos_y(7);
-        assertEquals("Point{x=3, y=7, color=#000000}", p.toString());
+        assertEquals("Point[pos_x=3, pos_y=7]", p.toString());
     }
 }

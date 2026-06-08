@@ -11,7 +11,7 @@ public class Main {
         
         // Ajouter une couche par défaut
         Layer defaultLayer = new Layer(0, "Formes");
-        app.currentArea.layers.add(defaultLayer);
+        app.currentArea.addLayer(defaultLayer);
         app.currentLayer = defaultLayer;
         
         Scanner scanner = new Scanner(System.in);

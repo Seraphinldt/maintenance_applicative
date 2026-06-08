@@ -12,9 +12,9 @@ public class Render {
     public static final char FULL_CHAR = '#';
 
     public static void renderArea(Area area) {
-        for (int i = 0; i < area.height; i++) {
-            for (int j = 0; j < area.width; j++) {
-                System.out.print(area.area[i][j]);
+        for (int i = 0; i < area.getHeight(); i++) {
+            for (int j = 0; j < area.getWidth(); j++) {
+                System.out.print(area.getArea()[i][j]);
             }
             System.out.println();
         }
@@ -30,12 +30,12 @@ public class Render {
     }
 
     public static void drawLayerShapes(Area area, Layer layer) {
-        if (!layer.visible) return;
-        for (Shape shape : layer.shapes) {
+        if (layer.getVisible() != Layer.LAYER_VISIBLE) return;
+        for (Shape shape : layer.getShapes()) {
             List<Pixel> pixels = PixelConverter.shapeToPixels(shape);
             for (Pixel pixel : pixels) {
-                if (pixel.getPx() >= 0 && pixel.getPx() < area.width && pixel.getPy() >= 0 && pixel.getPy() < area.height) {
-                    area.area[pixel.getPy()][pixel.getPx()] = FULL_CHAR;
+                if (pixel.getPx() >= 0 && pixel.getPx() < area.getWidth() && pixel.getPy() >= 0 && pixel.getPy() < area.getHeight()) {
+                    area.getArea()[pixel.getPy()][pixel.getPx()] = FULL_CHAR;
                 }
             }
         }
@@ -43,7 +43,7 @@ public class Render {
 
     public static void drawAllLayers(Area area) {
         area.clear();
-        for (Layer layer : area.layers) {
+        for (Layer layer : area.getLayers()) {
             drawLayerShapes(area, layer);
         }
     }

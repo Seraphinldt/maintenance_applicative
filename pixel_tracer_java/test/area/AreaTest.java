@@ -2,125 +2,120 @@ package area;
 
 import layer.Layer;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AreaTest {
 
-    private Area createArea() {
-        return new Area(2, 2, (byte) 0, "");
-    }
-
     @Test
     void testId() {
-        Area a = createArea();
+        Area a = new Area();
 
-        a.id = 1;
+        a.setId(1);
 
-        assertEquals(1, a.id);
+        assertEquals(1, a.getId());
     }
 
     @Test
     void testName() {
-        Area a = createArea();
+        Area a = new Area();
 
-        a.name = "Canvas";
+        a.setName("Canvas");
 
-        assertEquals("Canvas", a.name);
+        assertEquals("Canvas", a.getName());
     }
 
     @Test
     void testWidth() {
-        Area a = createArea();
+        Area a = new Area();
 
-        a.width = 100;
+        a.setWidth(100);
 
-        assertEquals(100, a.width);
+        assertEquals(100, a.getWidth());
     }
 
     @Test
     void testHeight() {
-        Area a = createArea();
+        Area a = new Area();
 
-        a.height = 50;
+        a.setHeight(50);
 
-        assertEquals(50, a.height);
+        assertEquals(50, a.getHeight());
     }
 
     @Test
     void testEmptyChar() {
-        Area a = createArea();
+        Area a = new Area();
 
-        a.emptyChar = '.';
+        a.setEmpty_char('.');
 
-        assertEquals('.', a.emptyChar);
+        assertEquals('.', a.getEmpty_char());
     }
 
     @Test
     void testFullChar() {
-        Area a = createArea();
+        Area a = new Area();
 
-        a.fullChar = '#';
+        a.setFull_char('#');
 
-        assertEquals('#', a.fullChar);
+        assertEquals('#', a.getFull_char());
     }
 
     @Test
     void testAddLayer() {
-        Area a = createArea();
+        Area a = new Area();
 
-        Layer l = new Layer(1, "Layer");
+        Layer l = new Layer();
 
-        a.layers.add(l);
+        a.addLayer(l);
 
-        assertEquals(1, a.layers.size());
+        assertEquals(1, a.getLst_layers().size());
     }
 
     @Test
     void testRemoveLayer() {
-        Area a = createArea();
+        Area a = new Area();
 
-        Layer l = new Layer(1, "Layer");
+        Layer l = new Layer();
 
-        a.layers.add(l);
-        a.layers.remove(l);
+        a.addLayer(l);
+        a.removeLayer(l);
 
-        assertEquals(0, a.layers.size());
+        assertEquals(0, a.getLst_layers().size());
     }
 
     @Test
     void testClearArea() {
-        Area a = new Area(2, 2, (byte) 0, "Test");
+        Area a = new Area();
 
         char[][] grid = {
             {'#', '#'},
             {'#', '#'}
         };
 
-        a.area = grid;
-        a.emptyChar = '.';
+        a.setArea(grid);
+        a.setEmpty_char('.');
 
-        a.clear();
+        a.clearArea();
 
-        assertEquals('.', a.area[0][0]);
-        assertEquals('.', a.area[1][1]);
+        assertEquals('.', a.getArea()[0][0]);
+        assertEquals('.', a.getArea()[1][1]);
     }
 
     @Test
-    void testFieldValues() {
-        Area a = createArea();
+    void testToString() {
+        Area a = new Area();
 
-        a.id = 1;
-        a.name = "TestArea";
-        a.width = 10;
-        a.height = 20;
-        a.emptyChar = '.';
-        a.fullChar = '#';
+        a.setId(1);
+        a.setName("TestArea");
+        a.setWidth(10);
+        a.setHeight(20);
+        a.setEmpty_char('.');
+        a.setFull_char('#');
 
-        assertEquals(1, a.id);
-        assertEquals("TestArea", a.name);
-        assertEquals(10, a.width);
-        assertEquals(20, a.height);
-        assertEquals('.', a.emptyChar);
-        assertEquals('#', a.fullChar);
+        assertEquals(
+            "Area[id=1, name=TestArea, width=10, height=20, empty_char=., full_char=#]",
+            a.toString()
+        );
     }
 }
