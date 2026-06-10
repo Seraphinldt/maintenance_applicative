@@ -110,11 +110,103 @@ La version Java propose également une interface interactive pour créer et dess
 
 ## Ce que fait le code Java
 
-- lit des commandes dans une boucle interactive.
-- crée des objets `Shape` pour les formes.
-- convertit ces objets en pixels via `PixelConverter`.
-- dessine les pixels sur une surface `Area`.
-- affiche le rendu avec des caractères dans la console.
+Le projet `pixel_tracer_java` est une petite application en ligne de commande qui permet de dessiner des formes géométriques sous forme de pixels dans une grille texte.
+
+Les composants principaux sont :
+
+- `Main.java` : le point d'entrée de l'application.
+- `pixel.PixelTracerApp` : stocke l'état global de l'application :
+  - `areas` : liste des zones de dessin,
+  - `currentArea` : la zone active,
+  - `currentLayer` : la couche active,
+  - `currentShape` : forme active (pas beaucoup utilisée dans `Main`).
+- `area.Area` : représente une grille 2D de caractères.
+- `layer.Layer` : contient des `Shape` et gère la visibilité d'une couche.
+- `shape.*` : différentes formes possibles :
+  - `Point`, `Line`, `Circle`, `Rectangle`, `Polygone`, `Curve`.
+- `pixel.PixelConverter` : transforme chaque forme en une liste de `Pixel`.
+- `render.Render` : dessine les pixels sur la grille et affiche la grille à l’écran.
+
+### Ce qui est lancé dans `main`
+
+Dans `Main.main(...)`, voici les étapes :
+
+1. Création de l'application :
+
+   - `PixelTracerApp app = new PixelTracerApp();`
+   - Cela initialise une zone de dessin par défaut de `80 x 24`.
+
+2. Création d'une couche par défaut :
+
+   - `Layer defaultLayer = new Layer(0, "Formes");`
+   - `app.currentArea.addLayer(defaultLayer);`
+   - `app.currentLayer = defaultLayer;`
+
+3. Initialisation du mode interactif :
+
+   - `Scanner scanner = new Scanner(System.in);`
+   - `Render.clearScreen();`
+   - affichage de l'aide avec `displayHelp();`
+   - affichage initial de la grille vide avec `Render.renderArea(app.currentArea);`
+
+4. Boucle principale infinie :
+
+   - lecture des commandes saisies par l’utilisateur.
+   - exécution de la commande selon le mot clé.
+
+### Commandes gérées dans `main`
+
+Le `switch` du main gère :
+
+- `quit` / `exit`
+  - quitte l’application.
+- `help`
+  - affiche l’aide.
+- `point <x> <y> <color_hex>`
+  - crée un point et l’ajoute à la couche.
+  - relance le rendu.
+- `line <x1> <y1> <x2> <y2> <color_hex>`
+  - crée une ligne entre deux points.
+- `circle <x> <y> <radius> <color_hex>`
+  - crée un cercle.
+- `rectangle <x> <y> <width> <height> <color_hex>`
+  - crée un rectangle.
+- `polygone ... <color_hex>`
+  - crée un polygone fermé à partir d’une liste de sommets.
+- `curve <x1> <y1> <x2> <y2> <x3> <y3> <x4> <y4> <color_hex>`
+  - crée une courbe de Bézier cubique approximée par des segments.
+- `clear`
+  - efface toute la zone et la grille.
+- `render`
+  - redessine la zone actuelle.
+
+Pour chaque forme ajoutée, `Main` appelle :
+
+- `app.currentLayer.addShape(...)`
+- `Render.drawAllLayers(app.currentArea)`
+- `Render.renderArea(app.currentArea)`
+
+### Comment le rendu fonctionne
+
+Dans `render.Render` :
+
+- `drawAllLayers(area)` :
+  - vide la grille `area.clear()`,
+  - parcourt toutes les couches visibles,
+  - convertit chaque forme en pixels via `PixelConverter.shapeToPixels(shape)`,
+  - place ces pixels dans la grille.
+- `renderArea(area)` :
+  - affiche la matrice de caractères sur la console.
+  - les pixels sont dessinés comme `#`,
+  - le reste de la grille est affiché tel quel.
+- `clearScreen()` :
+  - utilise des codes ANSI pour effacer le terminal.
+
+### À noter
+
+- Le code gère bien la saisie interactive et les erreurs de paramètres.
+- La couleur est parsée en hexadécimal, mais le rendu console utilise un caractère `#` fixe.
+- La structure est simple : un canevas, des couches, des formes, un convertisseur en pixels et un rendu texte.
 
 ## Installation
 
